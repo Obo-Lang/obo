@@ -19,20 +19,20 @@ typedef struct {
     };
 } Number;
 
+BigInt createBigInt(const char *str);
+BigInt addBigInt(BigInt a, BigInt b);
+BigInt subBigInt(BigInt a, BigInt b);
+BigInt mulBigInt(BigInt a, BigInt b);
+BigInt divBigInt(BigInt a, BigInt b);
+void freeBigInt(BigInt n);
+
 Number createNumberFromString(const char *str);
-
 Number createNumberFromInt(int value);
-
-void printNumber(Number n);
-
 Number addNumber(Number a, Number b);
-
 Number subNumber(Number a, Number b);
-
 Number mulNumber(Number a, Number b);
-
 Number divNumber(Number a, Number b);
-
+void printNumber(Number n);
 void freeNumber(Number n);
 
-#endif
+#endif // NUMBER_H

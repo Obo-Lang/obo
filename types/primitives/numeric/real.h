@@ -1,5 +1,3 @@
-// real.h
-
 #ifndef REAL_H
 #define REAL_H
 
@@ -20,19 +18,12 @@ typedef struct {
 } Real;
 
 Real createRealFromString(const char *str);
-
 Real createRealFromDouble(double value);
-
-void printReal(Real n);
-
 Real addReal(Real a, Real b);
-
 Real subReal(Real a, Real b);
-
 Real mulReal(Real a, Real b);
-
 Real divReal(Real a, Real b);
-
+void printReal(Real n);
 void freeReal(Real n);
 
 #endif

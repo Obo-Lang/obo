@@ -12,7 +12,6 @@ BigInt createBigInt(const char *str) {
     result.isNegative = (str[0] == '-');
     result.digits = (char *)malloc(result.length + 1);
     strcpy(result.digits, str + result.isNegative);
-    
     return result;
 }
 
@@ -20,9 +19,25 @@ void freeBigInt(BigInt n) {
     free(n.digits);
 }
 
+static void trimLeadingZeros(BigInt *n) {
+    int start = 0;
+    while (start < n->length - 1 && n->digits[start] == '0') {
+        start++;
+    }
+    if (start > 0) {
+        memmove(n->digits, n->digits + start, n->length - start + 1);
+        n->length -= start;
+    }
+}
+
+static int compareBigInt(BigInt a, BigInt b) {
+    if (a.length > b.length) return 1;
+    if (a.length < b.length) return -1;
+    return strcmp(a.digits, b.digits);
+}
+
 Number createNumberFromString(const char *str) {
     Number result;
-
     char *endptr;
     int value = strtol(str, &endptr, 10);
 
@@ -33,7 +48,6 @@ Number createNumberFromString(const char *str) {
         result.isBig = true;
         result.bigInt = createBigInt(str);
     }
-
     return result;
 }
 
@@ -56,6 +70,17 @@ void printNumber(Number n) {
 }
 
 BigInt addBigInt(BigInt a, BigInt b) {
+    if (a.isNegative != b.isNegative) {
+        // Handle addition of positive and negative BigInts
+        if (a.isNegative) {
+            a.isNegative = false;
+            return subBigInt(b, a);
+        } else {
+            b.isNegative = false;
+            return subBigInt(a, b);
+        }
+    }
+
     int maxLength = (a.length > b.length) ? a.length : b.length;
     char *result = (char *)malloc(maxLength + 2);
     
@@ -80,12 +105,28 @@ BigInt addBigInt(BigInt a, BigInt b) {
     BigInt sumResult;
     sumResult.length = strlen(result);
     sumResult.digits = result;
-    sumResult.isNegative = false;
+    sumResult.isNegative = a.isNegative;
+    
+    trimLeadingZeros(&sumResult);
     
     return sumResult;
 }
 
 BigInt subBigInt(BigInt a, BigInt b) {
+    if (a.isNegative != b.isNegative) {
+        b.isNegative = !b.isNegative;
+        return addBigInt(a, b);
+    }
+
+    // Ensure a >= b
+    if (compareBigInt(a, b) < 0) {
+        BigInt temp = a;
+        a = b;
+        b = temp;
+        a.isNegative = !a.isNegative;
+        b.isNegative = !b.isNegative;
+    }
+
     int maxLength = (a.length > b.length) ? a.length : b.length;
     char *result = (char *)malloc(maxLength + 1);
     
@@ -105,17 +146,14 @@ BigInt subBigInt(BigInt a, BigInt b) {
         result[maxLength - i - 1] = diff + '0';
     }
     
-    int start = 0;
-    while (start < maxLength - 1 && result[start] == '0') {
-        start++;
-    }
-    
     BigInt subResult;
-    subResult.length = maxLength - start;
+    subResult.length = maxLength;
     subResult.digits = (char *)malloc(subResult.length + 1);
-    strncpy(subResult.digits, result + start, subResult.length);
+    strncpy(subResult.digits, result, subResult.length);
     subResult.digits[subResult.length] = '\0';
-    subResult.isNegative = false;
+    subResult.isNegative = a.isNegative;
+    
+    trimLeadingZeros(&subResult);
     
     free(result);
     
@@ -136,17 +174,14 @@ BigInt mulBigInt(BigInt a, BigInt b) {
         result[maxLength - 1 - i - b.length] += carry;
     }
     
-    int start = 0;
-    while (start < maxLength - 1 && result[start] == '0') {
-        start++;
-    }
-    
     BigInt mulResult;
-    mulResult.length = maxLength - start;
+    mulResult.length = maxLength;
     mulResult.digits = (char *)malloc(mulResult.length + 1);
-    strncpy(mulResult.digits, result + start, mulResult.length);
+    strncpy(mulResult.digits, result, mulResult.length);
     mulResult.digits[mulResult.length] = '\0';
-    mulResult.isNegative = false;
+    mulResult.isNegative = a.isNegative != b.isNegative;
+    
+    trimLeadingZeros(&mulResult);
     
     free(result);
     
@@ -154,12 +189,54 @@ BigInt mulBigInt(BigInt a, BigInt b) {
 }
 
 BigInt divBigInt(BigInt a, BigInt b) {
-    // TODO
+    // This function will handle division.
+    // Note: This implementation assumes positive numbers and no leading zeros.
     BigInt result;
-    result.length = 0;
-    result.digits = NULL;
-    result.isNegative = false;
     
+    if (b.length == 1 && b.digits[0] == '0') {
+        printf("Error: Division by zero\n");
+        result.length = 0;
+        result.digits = NULL;
+        result.isNegative = false;
+        return result;
+    }
+
+    // Initialize result
+    result.length = a.length;
+    result.digits = (char *)malloc(result.length + 1);
+    memset(result.digits, '0', result.length);
+    result.digits[result.length] = '\0';
+    result.isNegative = a.isNegative != b.isNegative;
+
+    BigInt remainder = a;
+    remainder.isNegative = false;
+
+    BigInt divisor = b;
+    divisor.isNegative = false;
+
+    for (int i = 0; i < a.length; i++) {
+        // Shift the remainder and get the current digit
+        remainder.length--;
+        if (remainder.length > 0) {
+            remainder.digits = (char *)realloc(remainder.digits, remainder.length + 1);
+            memmove(remainder.digits, remainder.digits + 1, remainder.length);
+        } else {
+            remainder.digits = (char *)realloc(remainder.digits, 1);
+        }
+        remainder.digits[remainder.length - 1] = a.digits[i];
+
+        // Find the quotient digit
+        int quotientDigit = 0;
+        while (compareBigInt(remainder, divisor) >= 0) {
+            remainder = subBigInt(remainder, divisor);
+            quotientDigit++;
+        }
+
+        result.digits[i] = quotientDigit + '0';
+    }
+
+    trimLeadingZeros(&result);
+
     return result;
 }
 
