@@ -4,7 +4,7 @@
 #define COMPLEX_H
 
 #include <stdbool.h>
-#include "real.h"
+#include "includes.h"
 
 typedef struct {
     Real real;
@@ -12,15 +12,10 @@ typedef struct {
 } Complex;
 
 Complex createComplex(Real real, Real imag);
-
 Complex createComplexFromString(const char *realStr, const char *imagStr);
-
-void printComplex(Complex z);
-
 Complex addComplex(Complex a, Complex b);
-
 Complex mulComplex(Complex a, Complex b);
-
+void printComplex(Complex z);
 void freeComplex(Complex z);
 
 #endif

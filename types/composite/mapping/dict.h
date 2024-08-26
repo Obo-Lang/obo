@@ -4,6 +4,7 @@
 #define DICT_H
 
 #include <stdio.h>
+#include "includes.h"
 
 #define TABLE_SIZE 100
 
