@@ -1,6 +1,6 @@
 // number.c
+#include "types/primitive/numeric/number.h"
 
-#include "number.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

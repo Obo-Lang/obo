@@ -1,8 +1,8 @@
 // dict.c
+#include "types/composite/mapping/dict.h"
 
 #include <stdlib.h>
 #include <string.h>
-#include "dict.h"
 
 unsigned int hash(const char* key) {
     unsigned int hash = 0;

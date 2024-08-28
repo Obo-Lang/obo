@@ -1,6 +1,6 @@
 // complex.c
+#include "types/composite/numeric/complex.h"
 
-#include "complex.h"
 #include <stdio.h>
 #include <stdlib.h>
 
