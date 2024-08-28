@@ -7,4 +7,6 @@
     msg = Message("Hello!")
     msg.print()
     msg.msg = "Bye!", msg.print()
+
+main()
 ```

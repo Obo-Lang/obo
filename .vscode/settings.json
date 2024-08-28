@@ -2,6 +2,9 @@
     "files.associations": {
         "stdio.h": "c",
         "test.h": "c",
-        "real.h": "c"
+        "real.h": "c",
+        "lexer.h": "c",
+        "parser.h": "c",
+        "codegen.h": "c"
     }
 }
