@@ -1,4 +1,5 @@
 // complex.h
+#pragma once
 
 #ifndef COMPLEX_H
 #define COMPLEX_H

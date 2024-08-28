@@ -1,4 +1,5 @@
 // dict.h
+#pragma once
 
 #ifndef DICT_H
 #define DICT_H
