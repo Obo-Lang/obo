@@ -1,12 +1,11 @@
 ```
-@Message:
-    @.new(msg): .msg = msg
-    @.print(): print(.msg)
+Message(text):
+    .print: print(text)
 
-@main():
+main():
     msg = Message("Hello!")
-    msg.print()
-    msg.msg = "Bye!", msg.print()
+    msg.print
+    msg.msg = "Bye!", msg.print
 
 main()
 ```
