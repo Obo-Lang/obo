@@ -5,6 +5,7 @@
         "real.h": "c",
         "lexer.h": "c",
         "parser.h": "c",
-        "codegen.h": "c"
+        "codegen.h": "c",
+        "table.h": "c"
     }
 }

@@ -6,15 +6,18 @@
 
 #include <stdbool.h>
 
-typedef struct {
+typedef struct
+{
     char *digits;
     int length;
     bool isNegative;
 } BigInt;
 
-typedef struct {
+typedef struct
+{
     bool isBig;
-    union {
+    union
+    {
         int smallInt;
         BigInt bigInt;
     };

@@ -4,15 +4,19 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "compiler/lexer.h"
-
 typedef struct ASTNode {
-    Token token;
+    char* type;
+    char* value;
     struct ASTNode* left;
     struct ASTNode* right;
 } ASTNode;
 
-ASTNode* expr(const char* input, int* pos);
-void freeAST(ASTNode* node);
+ASTNode* create_ast_node(const char* type, const char* value);
+ASTNode* parse_factor();
+ASTNode* parse_term();
+ASTNode* parse_expr();
+ASTNode* parse_assignment();
+void print_ast(ASTNode* node, int level);
+void free_ast(ASTNode* node);
 
 #endif // PARSER_H

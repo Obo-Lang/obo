@@ -1,40 +1,46 @@
 // complex.c
-#include "types/composite/numeric/complex.h"
+#include "types/complex.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-Complex createComplex(Real real, Real imag) {
+Complex createComplex(Real real, Real imag)
+{
     Complex z;
     z.real = real;
     z.imag = imag;
     return z;
 }
 
-Complex createComplexFromString(const char *realStr, const char *imagStr) {
+Complex createComplexFromString(const char *realStr, const char *imagStr)
+{
     Complex z;
     z.real = createRealFromString(realStr);
     z.imag = createRealFromString(imagStr);
     return z;
 }
 
-void printComplex(Complex z) {
+void printComplex(Complex z)
+{
     printReal(z.real);
-    if (z.imag.isBig || z.imag.smallFloat >= 0) {
+    if (z.imag.isBig || z.imag.smallFloat >= 0)
+    {
         printf(" + ");
     }
     printReal(z.imag);
     printf("i\n");
 }
 
-Complex addComplex(Complex a, Complex b) {
+Complex addComplex(Complex a, Complex b)
+{
     Complex result;
     result.real = addReal(a.real, b.real);
     result.imag = addReal(a.imag, b.imag);
     return result;
 }
 
-Complex mulComplex(Complex a, Complex b) {
+Complex mulComplex(Complex a, Complex b)
+{
     Complex result;
 
     Real realPart1 = mulReal(a.real, b.real);
@@ -53,7 +59,8 @@ Complex mulComplex(Complex a, Complex b) {
     return result;
 }
 
-void freeComplex(Complex z) {
+void freeComplex(Complex z)
+{
     freeReal(z.real);
     freeReal(z.imag);
 }

@@ -5,9 +5,10 @@
 #define COMPLEX_H
 
 #include <stdbool.h>
-#include "types/primitive/numeric/real.h"
+#include "types/real.h"
 
-typedef struct {
+typedef struct
+{
     Real real;
     Real imag;
 } Complex;
